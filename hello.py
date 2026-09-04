@@ -7,6 +7,16 @@ username = "cool blogger"
 bio = "Fun Blogger"
 followers = 100
 
+username = input("Enter Username: ")
+age = input("Enter Age: ")
+category = input("Enter Content Category: ")
+
+print("\nInstagram Profile")
+print("=============")
+print("Username: ", username)
+print("Bio: ", bio)
+print("Category: ", category)
+
 followers += 50
 print("Day 1: ", followers)
 
@@ -16,7 +26,5 @@ print("Day 2: ", followers)
 followers -= 10
 print("Day 3: ", followers)
 
-print("Username: ", username)
-print("Bio: ", bio)
 print("Followers: ", followers)
 
