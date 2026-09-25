@@ -1,24 +1,24 @@
 import os
 
-# Variables
-orders = []  # List to store tuples/dicts of orders: (order_id, product_name, quantity)
+# State Variables
+orders = []  # List to store tuples/dicts: (order_id, product_name, quantity)
 failed_entries = 0
 total_tax = 0.0
-transaction_history = []  # List to store every valid quantity entered
+transaction_history = []  # List to store every valid transaction amount entered
 
 
 def load_inventory():
-    """Reads saved orders from orders.txt if it exists."""
-    if not os.path.exists("orders.txt"):
+    """Reads saved inventory and transaction history from inventory.txt if it exists."""
+    if not os.path.exists("inventory.txt"):
         return
 
     try:
-        with open("orders.txt", "r") as f:
+        with open("inventory.txt", "r") as f:
             for line in f:
                 line = line.strip()
                 if not line or line.startswith("Current Orders:") or line.startswith("Order successfully"):
                     continue
-                
+
                 parts = line.split(",")
                 if len(parts) == 3:
                     order_id = int(parts[0].strip())
@@ -27,16 +27,16 @@ def load_inventory():
                     orders.append({"id": order_id, "product": product_name, "quantity": quantity})
                     transaction_history.append(quantity)
     except Exception as e:
-        print(f"Error loading order history: {e}")
+        print(f"Error loading inventory file: {e}")
 
 
 def save_inventory():
-    """Saves orders to orders.txt."""
+    """Saves the orders and transaction history to inventory.txt upon quit."""
     try:
-        with open("orders.txt", "w") as f:
+        with open("inventory.txt", "w") as f:
             for order in orders:
                 f.write(f"{order['id']}, {order['product']}, {order['quantity']}\n")
-        print("\nOrder successfully saved to orders.txt")
+        print("\nOrder successfully saved to inventory.txt")
     except Exception as e:
         print(f"Error saving to file: {e}")
 
@@ -58,12 +58,14 @@ def get_valid_input():
     if qty_str.lower() == "quit":
         return "quit"
 
-    # Validate quantity
+    # Handle invalid input using isdigit()
     if not qty_str.isdigit():
         if qty_str.startswith("-") and qty_str[1:].isdigit():
+            # Enforce business rules: Reject negative numbers
             print("Error: Negative numbers are not allowed.")
         else:
             print("Error: Quantity must be a valid non-negative integer.")
+
         failed_entries += 1
         return None
 
@@ -86,11 +88,15 @@ def generate_report(total_units, failed_attempts):
     print(f"Total Units Processed: {total_units}")
     print(f"Total Tax Collected (10%): ${total_tax:.2f}")
     print(f"Number of Failed/Rejected Entries: {failed_attempts}")
+    print(f"Transaction History: {transaction_history}")
 
-# Load existing orders on startup
+
+# --- Execution Start ---
+
+# 1. Persistence: Read existing inventory file at start
 load_inventory()
 
-# Display current orders initially
+# Display current stored orders initially
 print("Current Orders:\n")
 if orders:
     for order in orders:
@@ -98,10 +104,12 @@ if orders:
 else:
     print("No existing orders found.")
 
+# Main Loop
 while True:
     result = get_valid_input()
 
     if result == "quit":
+        # 3. Write-Back: Save on quit
         save_inventory()
         break
 
@@ -113,12 +121,12 @@ while True:
     # Assign next ID (starting at 1001)
     next_id = 1001 if not orders else orders[-1]["id"] + 1
 
-    # Record order and track history
+    # 2. History Tracking: Store every valid transaction amount entered
     new_order = {"id": next_id, "product": product_name, "quantity": quantity}
     orders.append(new_order)
     transaction_history.append(quantity)
 
-    # Tax calculation
+    # Calculate tax for this specific delivery
     tax_for_delivery = calculate_tax(quantity)
     total_tax += tax_for_delivery
 
@@ -126,13 +134,13 @@ while True:
     print("\nNew Order Added:")
     print(f"{new_order['id']},{new_order['product']},{new_order['quantity']}")
 
-    # Check overstock limit across all items
+    # Overstock Alert Check
     total_units = sum(order["quantity"] for order in orders)
     if total_units > 500:
         print("\nALERT: Overstock limit exceeded! Combined inventory exceeds 500 units.")
         save_inventory()
         break
 
-# Final Summary Report
+# Final Reporting
 total_units = sum(order["quantity"] for order in orders)
 generate_report(total_units, failed_entries)
