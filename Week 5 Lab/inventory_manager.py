@@ -37,7 +37,7 @@ def save_inventory(show_message=True):
         
     print("Inventory saved successfully to inventory.json." if show_message else "Inventory saved successfully.")
 
-# Data Manipulation Functions
+# --- Requirement 2: Data Manipulation Functions ---
 
 def display_all():
     print("\nCurrent Inventory")
@@ -99,9 +99,16 @@ def search_product():
             
     print("\nProduct not found.")
 
-# Menu System
+# --- Requirement 4: Menu System ---
 
 def main_menu():
+    print("==============================================")
+    print("INVENTORY MANAGEMENT SYSTEM")
+    print("==============================================\n")
+    
+    # Load inventory at startup
+    load_inventory()
+    
     while True:
         print("\n----------- MENU -----------")
         print("1. Display All Products")
@@ -123,8 +130,11 @@ def main_menu():
         elif choice == "4":
             search_product()
         elif choice == "5":
-            print("\nSave functionality will be added in Requirement 3.")
+            print()
+            save_inventory(show_message=True)
         elif choice == "6":
+            print("\nSaving inventory before exit...")
+            save_inventory(show_message=False)
             print("\nThank you for using Inventory Management System.")
             print("Program terminated.")
             break
@@ -133,4 +143,3 @@ def main_menu():
 
 if __name__ == "__main__":
     main_menu()
-
