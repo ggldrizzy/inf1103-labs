@@ -1,9 +1,41 @@
-# Initial data setup: list of product dictionaries
-inventory = [
-    {"id": "P001","name": "Laptop","price": 1200.00,"stock": 15},
-    {"id": "P002","name": "Mouse","price": 25.50,"stock": 40},
-    {"id": "P003","name": "Keyboard","price": 45.00,"stock": 25}
-]
+import json
+import os
+
+# Global inventory list
+inventory = []
+
+# --- Requirement 3: Data Persistence Functions ---
+
+def load_inventory():
+    global inventory
+    filename = "inventory.json"
+    
+    if os.path.exists(filename):
+        try:
+            with open(filename, "r") as file:
+                inventory = json.load(file)
+            print("inventory.json found.")
+            print("Inventory loaded successfully.")
+        except json.JSONDecodeError:
+            print("inventory.json is corrupted. Starting with an empty inventory.")
+            inventory = []
+    else:
+        # Default initial data if inventory.json does not exist yet
+        inventory = [
+            {"id": "P001", "name": "Laptop", "price": 1200.00, "stock": 15},
+            {"id": "P002", "name": "Mouse", "price": 25.50, "stock": 40},
+            {"id": "P003", "name": "Keyboard", "price": 45.00, "stock": 25}
+        ]
+
+def save_inventory(show_message=True):
+    filename = "inventory.json"
+    if show_message:
+        print("Saving inventory...")
+    
+    with open(filename, "w") as file:
+        json.dump(inventory, file, indent=4)
+        
+    print("Inventory saved successfully to inventory.json." if show_message else "Inventory saved successfully.")
 
 # Data Manipulation Functions
 
@@ -101,3 +133,4 @@ def main_menu():
 
 if __name__ == "__main__":
     main_menu()
+
