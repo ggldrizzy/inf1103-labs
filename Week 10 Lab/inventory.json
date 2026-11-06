@@ -1,0 +1,28 @@
+[
+    {
+        "type": "physical",
+        "id": "P101",
+        "name": "Electric Guitar",
+        "price": 450.0,
+        "stock": 5,
+        "supplier": {
+            "supplier_id": "SUP000",
+            "name": "Generic Supplier",
+            "contact_email": "info@supplier.com"
+        },
+        "weight": 3.5
+    },
+    {
+        "type": "digital",
+        "id": "D201",
+        "name": "Audio Plugin Suite",
+        "price": 99.99,
+        "stock": 100,
+        "supplier": {
+            "supplier_id": "SUP000",
+            "name": "Generic Supplier",
+            "contact_email": "info@supplier.com"
+        },
+        "download_size": 150.5
+    }
+]
