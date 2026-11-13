@@ -24,5 +24,18 @@
             "contact_email": "info@supplier.com"
         },
         "download_size": 150.5
+    },
+    {
+        "type": "physical",
+        "id": "P102",
+        "name": "Mouse",
+        "price": 50.0,
+        "stock": 3,
+        "supplier": {
+            "supplier_id": "SUP000",
+            "name": "Generic Supplier",
+            "contact_email": "info@supplier.com"
+        },
+        "weight": 0.25
     }
 ]
